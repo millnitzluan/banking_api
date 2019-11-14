@@ -8,4 +8,13 @@ defmodule BankingApiWeb.Router do
   scope "/api", BankingApiWeb do
     pipe_through :api
   end
+
+  pipeline :browser do
+    plug(:accepts, ["html"])
+  end
+
+  scope "/health_check", BankingApiWeb do
+    pipe_through :browser
+    get "/", HealthCheckController, :index
+  end
 end
