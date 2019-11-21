@@ -1,8 +1,6 @@
 defmodule HealthCheckControllerTest do
   use BankingApiWeb.ConnCase
 
-  alias BankingApiWeb.HealthCheckController
-
   test "index/1 responds with up!! message", %{conn: conn} do
     response =
       conn
