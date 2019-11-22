@@ -7,6 +7,7 @@ defmodule BankingApi.Account do
   alias BankingApi.Repo
 
   alias BankingApi.Account.User
+  alias BankingApi.Auth.Guardian
 
   @doc """
   Returns the list of users.
@@ -100,5 +101,39 @@ defmodule BankingApi.Account do
   """
   def change_user(%User{} = user) do
     User.changeset(user, %{})
+  end
+
+  def token_sign_in(email, password) do
+    case email_password_auth(email, password) do
+      {:ok, user} ->
+        Guardian.encode_and_sign(user)
+      _ ->
+        {:error, :unauthorized}
+    end
+  end
+
+  defp email_password_auth(email, password) when is_binary(email) and is_binary(password) do
+    with {:ok, user} <- get_by_email(email),
+    do: verify_password(password, user)
+  end
+
+  @doc false
+  defp get_by_email(email) when is_binary(email) do
+    case Repo.get_by(User, email: email) do
+      nil ->
+        Argon2.no_user_verify()
+        {:error, "Authentication error."}
+      user ->
+        {:ok, user}
+    end
+  end
+
+  @doc false
+  defp verify_password(password, %User{} = user) when is_binary(password) do
+    if Argon2.check_pass(password, user.password_hash) do
+      {:ok, user}
+    else
+      {:error, :invalid_password}
+    end
   end
 end

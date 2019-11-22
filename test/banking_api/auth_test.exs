@@ -35,7 +35,7 @@ defmodule BankingApi.AccountTest do
     test "create_user/1 with valid data creates a user" do
       assert {:ok, %User{} = user} = Account.create_user(@valid_attrs)
       assert user.email == "some email"
-      assert Bcrypt.verify_pass("123321", user.password_hash)
+      assert Argon2.verify_pass("123321", user.password_hash)
     end
 
     test "create_user/1 with invalid data returns error changeset" do
@@ -46,7 +46,7 @@ defmodule BankingApi.AccountTest do
       user = user_fixture()
       assert {:ok, %User{} = user} = Account.update_user(user, @update_attrs)
       assert user.email == "some updated email"
-      assert Bcrypt.verify_pass("123123", user.password_hash)
+      assert Argon2.verify_pass("123123", user.password_hash)
     end
 
     test "update_user/2 with invalid data returns error changeset" do

@@ -15,15 +15,15 @@ defmodule BankingApi.Account.User do
     user
     |> cast(attrs, [:email, :password])
     |> validate_required([:email, :password])
-    |> validate_required([:email, ])
+    |> validate_required([:email, :password])
     |> unique_constraint(:email)
-    |> put_password_hash()
+    |> put_password_hash
   end
 
   defp put_password_hash(
          %Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset
        ) do
-    change(changeset, Bcrypt.add_hash(password))
+    change(changeset, Argon2.add_hash(password))
   end
 
   defp put_password_hash(changeset) do
