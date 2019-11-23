@@ -2,89 +2,69 @@ defmodule BankingApiWeb.UserControllerTest do
   use BankingApiWeb.ConnCase
 
   alias BankingApi.Account
-  alias BankingApi.Account.User
+  alias BankingApi.Auth.Guardian
 
   @create_attrs %{
     email: "some email",
     password: "some password"
   }
-  @update_attrs %{
-    email: "some updated email",
-    password: "some updated password"
-  }
   @invalid_attrs %{email: nil, password: nil}
-
-  def fixture(:user) do
-    {:ok, user} = Account.create_user(@create_attrs)
-    user
-  end
 
   setup %{conn: conn} do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
-  describe "index" do
-    test "lists all users", %{conn: conn} do
-      conn = get(conn, Routes.user_path(conn, :index))
-      assert json_response(conn, 200)["data"] == []
-    end
-  end
-
   describe "create user" do
-    test "renders user when data is valid", %{conn: conn} do
+    test "returns valid jwt token when user is created", %{conn: conn} do
       conn = post(conn, Routes.user_path(conn, :create), user: @create_attrs)
-      assert %{"id" => id} = json_response(conn, 201)["data"]
 
-      conn = get(conn, Routes.user_path(conn, :show, id))
-
-      assert %{
-               "id" => id,
-               "email" => "some email"
-             } = json_response(conn, 200)["data"]
+      assert %{"jwt" => jwt} = json_response(conn, 200)
+      assert {:ok, claims} = Guardian.decode_and_verify(jwt)
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
       conn = post(conn, Routes.user_path(conn, :create), user: @invalid_attrs)
+
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
 
-  describe "update user" do
-    setup [:create_user]
+  describe "sign in" do
+    test "returns valid jwt token when user is created", %{conn: conn} do
+      Account.create_user(@create_attrs)
 
-    test "renders user when data is valid", %{conn: conn, user: %User{id: id} = user} do
-      conn = put(conn, Routes.user_path(conn, :update, user), user: @update_attrs)
-      assert %{"id" => ^id} = json_response(conn, 200)["data"]
+      conn = post(conn, Routes.user_path(conn, :sign_in), @create_attrs)
 
-      conn = get(conn, Routes.user_path(conn, :show, id))
-
-      assert %{
-               "id" => id,
-               "email" => "some updated email"
-             } = json_response(conn, 200)["data"]
+      assert %{"jwt" => jwt} = json_response(conn, 200)
+      assert {:ok, claims} = Guardian.decode_and_verify(jwt)
     end
 
-    test "renders errors when data is invalid", %{conn: conn, user: user} do
-      conn = put(conn, Routes.user_path(conn, :update, user), user: @invalid_attrs)
-      assert json_response(conn, 422)["errors"] != %{}
+    test "returns error when login does not exist or is invalid", %{conn: conn} do
+      conn = post(conn, Routes.user_path(conn, :sign_in), @create_attrs)
+
+      assert %{"error" => error} = json_response(conn, 401)
+      assert error == "Login error"
     end
   end
 
-  describe "delete user" do
-    setup [:create_user]
+  describe "my user authenticated" do
+    setup %{conn: conn} do
+      {:ok, user} = Account.create_user(@create_attrs)
+      {:ok, token, _claims} = Guardian.encode_and_sign(user)
 
-    test "deletes chosen user", %{conn: conn, user: user} do
-      conn = delete(conn, Routes.user_path(conn, :delete, user))
-      assert response(conn, 204)
+      conn =
+        conn
+        |> put_req_header("accept", "application/json")
+        |> put_req_header("authorization", "Bearer #{token}")
 
-      assert_error_sent 404, fn ->
-        get(conn, Routes.user_path(conn, :show, user))
-      end
+      {:ok, conn: conn}
     end
-  end
 
-  defp create_user(_) do
-    user = fixture(:user)
-    {:ok, user: user}
+    test "returns user that is authenticated with jwt", %{conn: conn} do
+      conn = get(conn, Routes.user_path(conn, :show))
+
+      assert %{"id" => id, "email" => email} = json_response(conn, 200)
+      assert email == "some email"
+    end
   end
 end
