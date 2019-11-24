@@ -2,6 +2,7 @@ defmodule BankingApi.AccountTest do
   use BankingApi.DataCase
 
   alias BankingApi.Account
+  alias BankingApi.Auth.Guardian
 
   describe "users" do
     alias BankingApi.Account.User
@@ -64,6 +65,13 @@ defmodule BankingApi.AccountTest do
     test "change_user/1 returns a user changeset" do
       user = user_fixture()
       assert %Ecto.Changeset{} = Account.change_user(user)
+    end
+
+    test "token_sign_in/2 returns a valid token" do
+      user_fixture()
+      {:ok, token, _claims} = Account.token_sign_in("some email", "123321")
+
+      assert {:ok, jwt, claims} = Guardian.decode_and_verify(token)
     end
   end
 end
