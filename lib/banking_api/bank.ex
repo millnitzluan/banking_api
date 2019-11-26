@@ -101,7 +101,4 @@ defmodule BankingApi.Bank do
   def change_account(%Account{} = account) do
     Account.changeset(account, %{})
   end
-
-  def empty_func do
-  # end
 end
