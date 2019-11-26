@@ -71,7 +71,7 @@ defmodule BankingApi.AccountTest do
       user_fixture()
       {:ok, token, _claims} = Account.token_sign_in("some email", "123321")
 
-      assert {:ok, jwt, claims} = Guardian.decode_and_verify(token)
+      assert {:ok, jwt} = Guardian.decode_and_verify(token)
     end
   end
 end
