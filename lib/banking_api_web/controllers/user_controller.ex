@@ -3,15 +3,17 @@ defmodule BankingApiWeb.UserController do
 
   alias BankingApi.Account
   alias BankingApi.Account.User
+  alias BankingApi.Bank
   alias BankingApi.Auth.Guardian
 
   action_fallback BankingApiWeb.FallbackController
 
   def create(conn, %{"user" => user_params}) do
     with {:ok, %User{} = user} <- Account.create_user(user_params),
+         {:ok, %Bank.Account{} = account} <- Bank.create_account(%{user_id: user.id}),
          {:ok, token, _claims} <- Guardian.encode_and_sign(user) do
       conn
-      |> render("jwt.json", jwt: token)
+      |> render("new.json", jwt: token, balance: account.balance)
     end
   end
 

@@ -12,7 +12,7 @@ defmodule BankingApi.Bank.Account do
   @doc false
   def changeset(account, attrs) do
     account
-    |> cast(attrs, [:balance])
+    |> cast(attrs, [:balance, :user_id])
     |> validate_required([:balance])
   end
 end

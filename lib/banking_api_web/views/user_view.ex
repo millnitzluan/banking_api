@@ -17,4 +17,8 @@ defmodule BankingApiWeb.UserView do
   def render("jwt.json", %{jwt: jwt}) do
     %{jwt: jwt}
   end
+
+  def render("new.json", %{jwt: jwt, balance: balance}) do
+    %{jwt: jwt, balance: balance}
+  end
 end

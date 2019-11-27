@@ -18,8 +18,9 @@ defmodule BankingApiWeb.UserControllerTest do
     test "returns valid jwt token when user is created", %{conn: conn} do
       conn = post(conn, Routes.user_path(conn, :create), user: @create_attrs)
 
-      assert %{"jwt" => jwt} = json_response(conn, 200)
+      assert %{"jwt" => jwt, "balance" => balance} = json_response(conn, 200)
       assert {:ok, claims} = Guardian.decode_and_verify(jwt)
+      assert balance == 1000.0
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
