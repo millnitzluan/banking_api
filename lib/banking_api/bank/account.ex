@@ -4,6 +4,7 @@ defmodule BankingApi.Bank.Account do
 
   schema "accounts" do
     field :balance, :float, default: 1000.0
+    has_many :transactions, BankingApi.Bank.Transaction
     belongs_to :user, BankingApi.Account.User
 
     timestamps()

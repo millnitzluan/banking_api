@@ -61,4 +61,40 @@ defmodule BankingApi.BankTest do
       assert %Ecto.Changeset{} = Bank.change_account(account)
     end
   end
+
+  describe "transactions" do
+    alias BankingApi.Bank.Transaction
+
+    @valid_attrs %{type: "some type", value: 120.5}
+    @invalid_attrs %{type: nil, value: nil}
+
+    def transaction_fixture(attrs \\ %{}) do
+      {:ok, transaction} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Bank.create_transaction()
+
+      transaction
+    end
+
+    test "list_transactions/0 returns all transactions" do
+      transaction = transaction_fixture()
+      assert Bank.list_transactions() == [transaction]
+    end
+
+    test "get_transaction!/1 returns the transaction with given id" do
+      transaction = transaction_fixture()
+      assert Bank.get_transaction!(transaction.id) == transaction
+    end
+
+    test "create_transaction/1 with valid data creates a transaction" do
+      assert {:ok, %Transaction{} = transaction} = Bank.create_transaction(@valid_attrs)
+      assert transaction.type == "some type"
+      assert transaction.value == 120.5
+    end
+
+    test "create_transaction/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Bank.create_transaction(@invalid_attrs)
+    end
+  end
 end
