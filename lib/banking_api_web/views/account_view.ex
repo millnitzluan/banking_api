@@ -14,4 +14,12 @@ defmodule BankingApiWeb.AccountView do
     %{id: account.id,
       balance: account.balance}
   end
+
+  def render("user.json", %{user: user}) do
+    %{id: user.id, email: user.email}
+  end
+
+  def render("balance.json", %{account: account}) do
+    %{balance: account.balance}
+  end
 end

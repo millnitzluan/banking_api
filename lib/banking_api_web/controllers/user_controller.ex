@@ -28,7 +28,7 @@ defmodule BankingApiWeb.UserController do
       {:ok, token, _claims} ->
         conn
         |> render("jwt.json", jwt: token)
-      _ ->
+      {:error, _} ->
         {:error, :unauthorized}
     end
   end

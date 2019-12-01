@@ -24,4 +24,10 @@ defmodule BankingApiWeb.Router do
 
     get "/my_user", UserController, :show
   end
+
+  scope "/api/v1/accounts", BankingApiWeb do
+    pipe_through [:api, :jwt_authenticated]
+
+    post "/withdraw", AccountController, :withdraw
+  end
 end
