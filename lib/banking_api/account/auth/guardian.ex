@@ -1,4 +1,7 @@
 defmodule BankingApi.Auth.Guardian do
+  @moduledoc """
+  Implementation Module
+  """
   use Guardian, otp_app: :banking_api
 
   def subject_for_token(user, _claims) do

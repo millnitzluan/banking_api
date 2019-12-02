@@ -1,4 +1,8 @@
 defmodule BankingApi.Bank.Account do
+  @moduledoc """
+  The Account model.
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
 

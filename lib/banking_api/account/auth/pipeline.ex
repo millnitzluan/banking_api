@@ -1,4 +1,9 @@
 defmodule BankingApi.Auth.Pipeline do
+  @moduledoc """
+  A pipeline is just a way to get the implementation module and error handler
+  into the connection for use downstream.
+  """
+
   use Guardian.Plug.Pipeline, otp_app: :banking_api,
   module: BankingApi.Auth.Guardian,
   error_handler: BankingApi.Auth.ErrorHandler
