@@ -24,3 +24,4 @@ jobs:
           elixir-version: 1.9.x
       - run: mix deps.get
       - run: mix test
+      - run: mix credo --strict
