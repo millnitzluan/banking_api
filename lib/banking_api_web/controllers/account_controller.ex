@@ -21,6 +21,5 @@ defmodule BankingApiWeb.AccountController do
       _ ->
         {:error, :invalid_withdraw}
     end
-
   end
 end
