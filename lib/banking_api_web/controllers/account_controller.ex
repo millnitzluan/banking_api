@@ -15,7 +15,6 @@ defmodule BankingApiWeb.AccountController do
     case Bank.valid_transaction?(user, value) do
       {:ok, account} ->
         {:ok, account} = Bank.withdraw_from_account(account, value)
-        IO.inspect(account)
 
         conn
         |> render("balance.json", account: account)
