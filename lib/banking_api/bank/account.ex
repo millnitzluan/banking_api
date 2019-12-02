@@ -16,4 +16,9 @@ defmodule BankingApi.Bank.Account do
     |> cast(attrs, [:balance, :user_id])
     |> validate_required([:balance])
   end
+
+  def withdraw(account, %{value: value}) do
+    account
+    |> change(%{balance: account.balance - value})
+  end
 end

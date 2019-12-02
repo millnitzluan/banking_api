@@ -25,4 +25,10 @@ defmodule BankingApiWeb.FallbackController do
     |> put_status(:unauthorized)
     |> json(%{error: "Login error"})
   end
+
+  def call(conn, {:error, :invalid_withdraw}) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> json(%{error: "Invalid balance value to withdraw"})
+  end
 end

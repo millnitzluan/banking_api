@@ -149,4 +149,23 @@ defmodule BankingApi.Bank do
     |> Transaction.changeset(attrs)
     |> Repo.insert()
   end
+
+  def withdraw_from_account(account, value) do
+    Repo.insert(%Transaction{value: value, account: account, type: "withdraw"})
+
+    account
+    |> Account.withdraw(%{value: value})
+    |> Repo.update()
+  end
+
+  def valid_transaction?(account, value) do
+    case valid_withdraw_from_account?(account, value) do
+      true -> {:ok, account}
+      _ -> {:error}
+    end
+  end
+
+  defp valid_withdraw_from_account?(account, value) do
+    (account.balance - value ) >= 0
+  end
 end
