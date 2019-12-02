@@ -97,4 +97,29 @@ defmodule BankingApi.BankTest do
       assert {:error, %Ecto.Changeset{}} = Bank.create_transaction(@invalid_attrs)
     end
   end
+
+  describe "withdraw from account" do
+    test "withdraws from account and create transaction" do
+      account = account_fixture()
+      {:ok, account} = Bank.withdraw_from_account(account, 20.0)
+
+      transaction = List.first(Bank.list_transactions)
+
+      assert account.balance == 100.5
+      assert transaction.value == 20.0
+      assert transaction.type == "withdraw"
+    end
+  end
+
+  describe "valid transaction" do
+    test "returns account if is a valid trasnsaction" do
+      account = account_fixture()
+      assert {:ok, account} = Bank.valid_transaction?(account, 20.0)
+    end
+
+    test "returns error if is not a valid trasnsaction" do
+      account = account_fixture()
+      assert {:error} = Bank.valid_transaction?(account, 200.0)
+    end
+  end
 end

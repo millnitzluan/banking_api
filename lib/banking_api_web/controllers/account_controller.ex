@@ -12,7 +12,7 @@ defmodule BankingApiWeb.AccountController do
   def withdraw(conn,  %{"value" => value}) do
     user = Guardian.Plug.current_resource(conn) |> Repo.preload(:account)
 
-    case Bank.valid_transaction?(user, value) do
+    case Bank.valid_transaction?(user.account, value) do
       {:ok, account} ->
         {:ok, account} = Bank.withdraw_from_account(account, value)
 

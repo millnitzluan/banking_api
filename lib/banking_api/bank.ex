@@ -158,9 +158,9 @@ defmodule BankingApi.Bank do
     |> Repo.update()
   end
 
-  def valid_transaction?(user, value) do
-    case valid_withdraw_from_account?(user.account, value) do
-      true -> {:ok, user.account}
+  def valid_transaction?(account, value) do
+    case valid_withdraw_from_account?(account, value) do
+      true -> {:ok, account}
       _ -> {:error}
     end
   end
