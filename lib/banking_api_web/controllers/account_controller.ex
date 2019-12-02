@@ -1,8 +1,6 @@
 defmodule BankingApiWeb.AccountController do
   use BankingApiWeb, :controller
 
-  # alias BankingApi.Account
-  # alias BankingApi.Account.User
   alias BankingApi.Auth.Guardian
   alias BankingApi.Bank
   alias BankingApi.Repo
