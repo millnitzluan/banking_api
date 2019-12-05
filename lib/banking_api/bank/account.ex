@@ -25,4 +25,9 @@ defmodule BankingApi.Bank.Account do
     account
     |> change(%{balance: account.balance - value})
   end
+
+  def deposit(account, %{value: value}) do
+    account
+    |> change(%{balance: account.balance + value})
+  end
 end

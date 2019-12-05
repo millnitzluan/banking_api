@@ -119,7 +119,7 @@ defmodule BankingApi.Account do
 
   @doc false
   defp get_by_email(email) when is_binary(email) do
-    case Repo.get_by(User, email: email) do
+    case find_user_by_email(email) do
       nil ->
         Argon2.no_user_verify()
         {:error, "Authentication error."}
@@ -135,5 +135,9 @@ defmodule BankingApi.Account do
     else
       {:error, :invalid_password}
     end
+  end
+
+  def find_user_by_email(email) do
+    Repo.get_by(User, email: email)
   end
 end

@@ -31,4 +31,16 @@ defmodule BankingApiWeb.FallbackController do
     |> put_status(:unprocessable_entity)
     |> json(%{error: "Invalid balance value to withdraw"})
   end
+
+  def call(conn, {:error, :invalid_transfer}) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> json(%{error: "Invalid balance value to transfer"})
+  end
+
+  def call(conn, {:error, :invalid_receiver}) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> json(%{error: "Invalid receiver"})
+  end
 end
