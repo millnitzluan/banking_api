@@ -120,11 +120,10 @@ defmodule BankingApi.Account do
   @doc false
   defp get_by_email(email) when is_binary(email) do
     case find_user_by_email(email) do
-      nil ->
+      {:error, _} ->
         Argon2.no_user_verify()
         {:error, "Authentication error."}
-      user ->
-        {:ok, user}
+      {:ok, user} -> {:ok, user}
     end
   end
 
@@ -138,6 +137,10 @@ defmodule BankingApi.Account do
   end
 
   def find_user_by_email(email) do
-    Repo.get_by(User, email: email)
+    case Repo.get_by(User, email: email) |> Repo.preload(:account) do
+      nil -> {:error, "User not found"}
+      user ->
+        {:ok, user}
+    end
   end
 end
