@@ -28,6 +28,11 @@ defmodule BankingApi.AccountTest do
       assert Account.list_users() == [user]
     end
 
+    test "find_user_by_email/1 returns the user with given id" do
+      user = user_fixture() |> BankingApi.Repo.preload(:account)
+      assert Account.find_user_by_email(user.email) == {:ok, user}
+    end
+
     test "get_user!/1 returns the user with given id" do
       user = user_fixture()
       assert Account.get_user!(user.id) == user
