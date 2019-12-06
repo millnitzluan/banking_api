@@ -29,5 +29,6 @@ defmodule BankingApiWeb.Router do
     pipe_through [:api, :jwt_authenticated]
 
     post "/withdraw", AccountController, :withdraw
+    post "/transfer", AccountController, :transfer
   end
 end

@@ -5,14 +5,19 @@ defmodule BankingApiWeb.AccountControllerTest do
   alias BankingApi.Auth.Guardian
   alias BankingApi.Bank
 
-  @create_attrs %{
+  @current_user %{
     email: "some email",
+    password: "some password"
+  }
+
+  @receiver_user %{
+    email: "receiver",
     password: "some password"
   }
 
   describe "withdraw" do
     setup %{conn: conn} do
-      {:ok, user} = Account.create_user(@create_attrs)
+      {:ok, user} = Account.create_user(@current_user)
       {:ok, token, _claims} = Guardian.encode_and_sign(user)
       Bank.create_account(%{user_id: user.id})
 
@@ -33,6 +38,31 @@ defmodule BankingApiWeb.AccountControllerTest do
 
     test "renders errors when value to withdraw is more than account balance", %{conn: conn} do
       conn = post(conn, Routes.account_path(conn, :withdraw), value: 2000.0)
+
+      assert json_response(conn, 422)["errors"] != %{}
+    end
+
+    test "transfer value from current_account to receiver, and return current balance ", %{conn: conn} do
+      {:ok, %BankingApi.Account.User{} = receiver} = Account.create_user(@receiver_user)
+      Bank.create_account(%{user_id: receiver.id})
+
+      conn = post(conn, Routes.account_path(conn, :transfer), %{value: 20.0, receiver_email: receiver.email})
+
+      assert %{"balance" => balance} = json_response(conn, 200)
+      assert balance == 980.0
+    end
+
+    test "renders errors when value to transfer is more than account balance", %{conn: conn} do
+      {:ok, %BankingApi.Account.User{} = receiver} = Account.create_user(@receiver_user)
+      Bank.create_account(%{user_id: receiver.id})
+
+      conn = post(conn, Routes.account_path(conn, :transfer), %{value: 2000.0, receiver_email: receiver.email})
+
+      assert json_response(conn, 422)["errors"] != %{}
+    end
+
+    test "renders errors when receiver is not valid", %{conn: conn} do
+      conn = post(conn, Routes.account_path(conn, :transfer), %{value: 2000.0, receiver_email: "invalid email"})
 
       assert json_response(conn, 422)["errors"] != %{}
     end

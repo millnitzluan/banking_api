@@ -151,7 +151,8 @@ defmodule BankingApi.Bank do
   end
 
   def withdraw_from_account(account, value) do
-    Repo.insert(%Transaction{value: value, account: account, type: "withdraw"})
+    account
+    |> create_transaction(value, "withdraw")
 
     account
     |> Account.withdraw(%{value: value})
@@ -163,6 +164,23 @@ defmodule BankingApi.Bank do
       true -> {:ok, account}
       _ -> {:error}
     end
+  end
+
+  def transfer_to_account(account, receiver, value) do
+    account
+    |> create_transaction(value, "transfer")
+
+    receiver
+    |> Account.deposit(%{value: value})
+    |> Repo.update()
+
+    account
+    |> Account.withdraw(%{value: value})
+    |> Repo.update()
+  end
+
+  defp create_transaction(account, value, type) do
+    Repo.insert(%Transaction{account: account, value: value, type: type})
   end
 
   defp valid_withdraw_from_account?(account, value) do

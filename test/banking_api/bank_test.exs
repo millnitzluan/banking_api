@@ -111,6 +111,23 @@ defmodule BankingApi.BankTest do
     end
   end
 
+  describe "transfer to receiver" do
+    test "transfer to receiver and create transaction" do
+      account = account_fixture()
+      receiver = account_fixture()
+
+      {:ok, account} = Bank.transfer_to_account(account, receiver, 10.0)
+      receiver = Bank.get_account!(receiver.id)
+
+      transaction = List.first(Bank.list_transactions)
+
+      assert account.balance == 110.5
+      assert transaction.value == 10.0
+      assert transaction.type == "transfer"
+      assert receiver.balance == 130.5
+    end
+  end
+
   describe "valid transaction" do
     test "returns account if is a valid trasnsaction" do
       account = account_fixture()
