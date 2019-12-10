@@ -1,19 +1,32 @@
 # BankingApi
 
-To start your Phoenix server:
+This API was created to demonstrate a fully fledged backend application built with **Elixir and Phoenix** including CRUD operations and authentication.
 
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.setup`
-  * Start Phoenix endpoint with `mix phx.server`
+## Installing / Getting started
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+To run this project, you will need to install the following dependencies on your system:
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+* [Elixir 1.9.2](https://elixir-lang.org/install.html)
+* [Phoenix](https://hexdocs.pm/phoenix/installation.html)
+* [PostgreSQL](https://www.postgresql.org/download/macosx/)
 
-## Learn more
+To get started, run the following commands in your project folder:
 
-  * Official website: http://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Mailing list: http://groups.google.com/group/phoenix-talk
-  * Source: https://github.com/phoenixframework/phoenix
+```shell
+mix deps.get  # installs the dependencies
+mix ecto.create  # creates the database.
+mix ecto.migrate  # run the database migrations.
+mix phx.server  # run the application.
+```
+
+## Tests
+
+To run the tests for this project, simply run in your terminal:
+
+```shell
+mix test
+```
+
+## Style guide
+
+This project uses [mix credo --strict](https://github.com/rrrene/elixir-style-guide).
