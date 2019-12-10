@@ -5,7 +5,7 @@ defmodule BankingApiWeb.UserControllerTest do
   alias BankingApi.Auth.Guardian
 
   @create_attrs %{
-    email: "some email",
+    email: "luan@email.com",
     password: "some password"
   }
   @invalid_attrs %{email: nil, password: nil}
@@ -65,7 +65,7 @@ defmodule BankingApiWeb.UserControllerTest do
       conn = get(conn, Routes.user_path(conn, :show))
 
       assert %{"id" => id, "email" => email} = json_response(conn, 200)
-      assert email == "some email"
+      assert email == "luan@email.com"
     end
   end
 end

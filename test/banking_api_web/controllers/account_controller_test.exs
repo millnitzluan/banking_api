@@ -6,12 +6,12 @@ defmodule BankingApiWeb.AccountControllerTest do
   alias BankingApi.Bank
 
   @current_user %{
-    email: "some email",
+    email: "luan@email.com",
     password: "some password"
   }
 
   @receiver_user %{
-    email: "receiver",
+    email: "receiver@email.com",
     password: "some password"
   }
 
