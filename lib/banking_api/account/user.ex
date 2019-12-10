@@ -20,6 +20,7 @@ defmodule BankingApi.Account.User do
     user
     |> cast(attrs, [:email, :password])
     |> validate_required([:email, :password])
+    |> validate_format(:email, email_regex())
     |> unique_constraint(:email)
     |> put_password_hash
   end
@@ -32,5 +33,10 @@ defmodule BankingApi.Account.User do
 
   defp put_password_hash(changeset) do
     changeset
+  end
+
+  defp email_regex do
+    # credo:disable-for-next-line
+    ~r/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i
   end
 end

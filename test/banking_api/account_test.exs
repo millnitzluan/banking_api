@@ -7,9 +7,9 @@ defmodule BankingApi.AccountTest do
   describe "users" do
     alias BankingApi.Account.User
 
-    @valid_attrs %{email: "some email", password: "123321"}
+    @valid_attrs %{email: "luan@email.com", password: "123321"}
     @update_attrs %{
-      email: "some updated email",
+      email: "luanmillnitz@email.com",
       password: "123123"
     }
     @invalid_attrs %{email: nil, password: nil}
@@ -40,7 +40,7 @@ defmodule BankingApi.AccountTest do
 
     test "create_user/1 with valid data creates a user" do
       assert {:ok, %User{} = user} = Account.create_user(@valid_attrs)
-      assert user.email == "some email"
+      assert user.email == "luan@email.com"
       assert Argon2.verify_pass("123321", user.password_hash)
     end
 
@@ -48,10 +48,15 @@ defmodule BankingApi.AccountTest do
       assert {:error, %Ecto.Changeset{}} = Account.create_user(@invalid_attrs)
     end
 
+    test "create_user/1 with invalid email returns error changeset" do
+      invalid_email = %{email: "das@cas", password: "123123"}
+      assert {:error, %Ecto.Changeset{}} = Account.create_user(invalid_email)
+    end
+
     test "update_user/2 with valid data updates the user" do
       user = user_fixture()
       assert {:ok, %User{} = user} = Account.update_user(user, @update_attrs)
-      assert user.email == "some updated email"
+      assert user.email == "luanmillnitz@email.com"
       assert Argon2.verify_pass("123123", user.password_hash)
     end
 
@@ -74,7 +79,7 @@ defmodule BankingApi.AccountTest do
 
     test "token_sign_in/2 returns a valid token" do
       user_fixture()
-      {:ok, token, _claims} = Account.token_sign_in("some email", "123321")
+      {:ok, token, _claims} = Account.token_sign_in("luan@email.com", "123321")
 
       assert {:ok, jwt} = Guardian.decode_and_verify(token)
     end
