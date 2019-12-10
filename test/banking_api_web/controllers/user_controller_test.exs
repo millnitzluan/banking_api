@@ -28,6 +28,17 @@ defmodule BankingApiWeb.UserControllerTest do
 
       assert json_response(conn, 422)["errors"] != %{}
     end
+
+    test "renders errors when email is invalid", %{conn: conn} do
+      invalid_email = %{
+        email: "luan@email",
+        password: "some password"
+      }
+
+      conn = post(conn, Routes.user_path(conn, :create), user: invalid_email)
+
+      assert json_response(conn, 422)["errors"] != %{}
+    end
   end
 
   describe "sign in" do
