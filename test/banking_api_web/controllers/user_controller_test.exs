@@ -5,7 +5,7 @@ defmodule BankingApiWeb.UserControllerTest do
   alias BankingApi.Auth.Guardian
 
   @create_attrs %{
-    email: "some email",
+    email: "luan@email.com",
     password: "some password"
   }
   @invalid_attrs %{email: nil, password: nil}
@@ -25,6 +25,17 @@ defmodule BankingApiWeb.UserControllerTest do
 
     test "renders errors when data is invalid", %{conn: conn} do
       conn = post(conn, Routes.user_path(conn, :create), user: @invalid_attrs)
+
+      assert json_response(conn, 422)["errors"] != %{}
+    end
+
+    test "renders errors when email is invalid", %{conn: conn} do
+      invalid_email = %{
+        email: "luan@email",
+        password: "some password"
+      }
+
+      conn = post(conn, Routes.user_path(conn, :create), user: invalid_email)
 
       assert json_response(conn, 422)["errors"] != %{}
     end
@@ -65,7 +76,7 @@ defmodule BankingApiWeb.UserControllerTest do
       conn = get(conn, Routes.user_path(conn, :show))
 
       assert %{"id" => id, "email" => email} = json_response(conn, 200)
-      assert email == "some email"
+      assert email == "luan@email.com"
     end
   end
 end
