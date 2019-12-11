@@ -1,0 +1,40 @@
+version: '3.1'
+
+services:
+  database:
+    image: postgres
+    deploy:
+      restart_policy:
+        condition: on-failure
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: banking_api_prod
+    networks:
+      - backend
+
+  web:
+    image: banking_api
+    restart: always
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    networks:
+      - backend
+    environment:
+      APP_PORT: ${APP_PORT}
+      APP_HOSTNAME: ${APP_HOSTNAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: ${DB_HOST}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      COOL_TEXT: ${COOL_TEXT}
+    depends_on:
+      - database
+    links:
+      - database
+
+networks:
+  backend:
+
+volumes:
+  postgres96:
