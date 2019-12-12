@@ -2,8 +2,9 @@
 
 This API was created to demonstrate a fully fledged backend application built with **Elixir and Phoenix** including CRUD operations and authentication.
 
-## Installing / Getting started
+## Installing / Getting started 
 
+### All services locally
 To run this project, you will need to install the following dependencies on your system:
 
 * [Elixir 1.9.2](https://elixir-lang.org/install.html)
@@ -18,6 +19,14 @@ mix deps.get  # installs the dependencies
 mix ecto.create  # creates the database.
 mix ecto.migrate  # run the database migrations.
 mix phx.server  # run the application.
+```
+
+### Docker compose
+
+Assuming that you have docker and docker-compose installed, just run:
+```
+docker build -t banking_api .
+docker-compose up
 ```
 
 ## Tests

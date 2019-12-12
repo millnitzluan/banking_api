@@ -4,9 +4,6 @@ services:
 
   database:
     image: postgres
-    deploy:
-      restart_policy:
-        condition: on-failure
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
