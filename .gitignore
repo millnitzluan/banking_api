@@ -28,3 +28,4 @@ banking_api-*.tar
 /priv/static/
 .elixir_ls
 config/prod.secret.exs
+.env
