@@ -17,14 +17,8 @@ defmodule BankingApiWeb.UserController do
     end
   end
 
-  def show(conn, _params) do
-    user = Guardian.Plug.current_resource(conn)
-    conn
-    |> render("user.json", user: user)
-  end
-
-  def sign_in(conn, %{"email" => email, "password" => password}) do
-    case Account.token_sign_in(email, password) do
+  def sign_in(conn, %{"user" => user_params}) do
+    case Account.token_sign_in(user_params["email"], user_params["password"]) do
       {:ok, token, _claims} ->
         conn
         |> render("jwt.json", jwt: token)

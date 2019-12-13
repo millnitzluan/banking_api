@@ -29,6 +29,13 @@ docker build -t banking_api .
 docker-compose up
 ```
 
+## API Documentation Insomnia
+
+You can get [Insomnia here](https://insomnia.rest/download/).
+
+If you have postman or insomnia already installed, you can just import `insomnia.json` and consume the API.
+For Account endpoints you need replace the token for a new one generated in `sign_in or sign_up`.
+
 ## Tests
 
 To run the tests for this project, simply run in your terminal:

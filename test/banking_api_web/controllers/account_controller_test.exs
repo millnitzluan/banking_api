@@ -67,4 +67,27 @@ defmodule BankingApiWeb.AccountControllerTest do
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
+
+  describe "account info" do
+    setup %{conn: conn} do
+      {:ok, user} = Account.create_user(@current_user)
+      {:ok, token, _claims} = Guardian.encode_and_sign(user)
+      Bank.create_account(%{user_id: user.id})
+
+      conn =
+        conn
+        |> put_req_header("accept", "application/json")
+        |> put_req_header("authorization", "Bearer #{token}")
+
+      {:ok, conn: conn}
+    end
+
+    test "returns user that is authenticated with jwt", %{conn: conn} do
+      conn = get(conn, Routes.account_path(conn, :show))
+
+      assert %{"id" => id, "email" => email, "balance" => balance} = json_response(conn, 200)
+      assert email == "luan@email.com"
+      assert balance == 1000.0
+    end
+  end
 end

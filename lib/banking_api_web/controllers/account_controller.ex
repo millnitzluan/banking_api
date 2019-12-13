@@ -41,4 +41,10 @@ defmodule BankingApiWeb.AccountController do
         {:error, :invalid_transfer}
     end
   end
+
+  def show(conn, _params) do
+    user = Guardian.Plug.current_resource(conn) |> Repo.preload(:account)
+    conn
+    |> render("user.json", user: user)
+  end
 end
