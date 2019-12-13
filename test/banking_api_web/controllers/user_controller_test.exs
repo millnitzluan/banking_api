@@ -45,38 +45,17 @@ defmodule BankingApiWeb.UserControllerTest do
     test "returns valid jwt token when user is created", %{conn: conn} do
       Account.create_user(@create_attrs)
 
-      conn = post(conn, Routes.user_path(conn, :sign_in), @create_attrs)
+      conn = post(conn, Routes.user_path(conn, :sign_in), user: @create_attrs)
 
       assert %{"jwt" => jwt} = json_response(conn, 200)
       assert {:ok, claims} = Guardian.decode_and_verify(jwt)
     end
 
     test "returns error when login does not exist or is invalid", %{conn: conn} do
-      conn = post(conn, Routes.user_path(conn, :sign_in), @create_attrs)
+      conn = post(conn, Routes.user_path(conn, :sign_in), user: @create_attrs)
 
       assert %{"error" => error} = json_response(conn, 401)
       assert error == "Login error"
-    end
-  end
-
-  describe "my user authenticated" do
-    setup %{conn: conn} do
-      {:ok, user} = Account.create_user(@create_attrs)
-      {:ok, token, _claims} = Guardian.encode_and_sign(user)
-
-      conn =
-        conn
-        |> put_req_header("accept", "application/json")
-        |> put_req_header("authorization", "Bearer #{token}")
-
-      {:ok, conn: conn}
-    end
-
-    test "returns user that is authenticated with jwt", %{conn: conn} do
-      conn = get(conn, Routes.user_path(conn, :show))
-
-      assert %{"id" => id, "email" => email} = json_response(conn, 200)
-      assert email == "luan@email.com"
     end
   end
 end

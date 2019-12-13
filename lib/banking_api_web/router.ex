@@ -22,12 +22,12 @@ defmodule BankingApiWeb.Router do
   scope "/api/v1", BankingApiWeb do
     pipe_through [:api, :jwt_authenticated]
 
-    get "/my_user", UserController, :show
   end
 
   scope "/api/v1/accounts", BankingApiWeb do
     pipe_through [:api, :jwt_authenticated]
 
+    get "/info", AccountController, :show
     post "/withdraw", AccountController, :withdraw
     post "/transfer", AccountController, :transfer
   end

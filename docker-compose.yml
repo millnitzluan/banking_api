@@ -1,0 +1,24 @@
+version: '3.1'
+
+services:
+
+  database:
+    image: postgres
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: banking_api_prod
+
+  web:
+    image: banking_api:latest
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    environment:
+      APP_PORT: ${APP_PORT}
+      APP_HOSTNAME: ${APP_HOSTNAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: database
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+    depends_on:
+      - database

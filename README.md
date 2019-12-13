@@ -2,8 +2,9 @@
 
 This API was created to demonstrate a fully fledged backend application built with **Elixir and Phoenix** including CRUD operations and authentication.
 
-## Installing / Getting started
+## Installing / Getting started 
 
+### All services locally
 To run this project, you will need to install the following dependencies on your system:
 
 * [Elixir 1.9.2](https://elixir-lang.org/install.html)
@@ -13,11 +14,27 @@ To run this project, you will need to install the following dependencies on your
 To get started, run the following commands in your project folder:
 
 ```shell
+cp .env.sample .env
 mix deps.get  # installs the dependencies
 mix ecto.create  # creates the database.
 mix ecto.migrate  # run the database migrations.
 mix phx.server  # run the application.
 ```
+
+### Docker compose
+
+Assuming that you have docker and docker-compose installed, just run:
+```
+docker build -t banking_api .
+docker-compose up
+```
+
+## API Documentation Insomnia
+
+You can get [Insomnia here](https://insomnia.rest/download/).
+
+If you have postman or insomnia already installed, you can just import `insomnia.json` and consume the API.
+For Account endpoints you need replace the token for a new one generated in `sign_in or sign_up`.
 
 ## Tests
 
