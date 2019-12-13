@@ -2,6 +2,13 @@
 
 This API was created to demonstrate a fully fledged backend application built with **Elixir and Phoenix** including CRUD operations and authentication.
 
+Features:
+
+* Docker compose
+* Authentication
+* Database relationship
+* CRUD.
+
 ## Installing / Getting started 
 
 ### All services locally
