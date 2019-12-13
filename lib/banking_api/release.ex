@@ -1,4 +1,8 @@
 defmodule BankingApi.Release do
+  @moduledoc """
+  The Release implementation context.
+  """
+
   @app :banking_api
 
   def migrate do
