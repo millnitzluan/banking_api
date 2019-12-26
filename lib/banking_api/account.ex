@@ -4,23 +4,8 @@ defmodule BankingApi.Account do
   """
 
   import Ecto.Query, warn: false
-  alias BankingApi.Repo
 
-  alias BankingApi.Account.User
-  alias BankingApi.Auth.Guardian
-
-  @doc """
-  Returns the list of users.
-
-  ## Examples
-
-      iex> list_users()
-      [%User{}, ...]
-
-  """
-  def list_users do
-    Repo.all(User)
-  end
+  alias BankingApi.{Account.User, Auth.Guardian, Repo}
 
   @doc """
   Gets a single user.
@@ -56,57 +41,11 @@ defmodule BankingApi.Account do
     |> Repo.insert()
   end
 
-  @doc """
-  Updates a user.
-
-  ## Examples
-
-      iex> update_user(user, %{field: new_value})
-      {:ok, %User{}}
-
-      iex> update_user(user, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_user(%User{} = user, attrs) do
-    user
-    |> User.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Deletes a User.
-
-  ## Examples
-
-      iex> delete_user(user)
-      {:ok, %User{}}
-
-      iex> delete_user(user)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_user(%User{} = user) do
-    Repo.delete(user)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking user changes.
-
-  ## Examples
-
-      iex> change_user(user)
-      %Ecto.Changeset{source: %User{}}
-
-  """
-  def change_user(%User{} = user) do
-    User.changeset(user, %{})
-  end
-
   def token_sign_in(email, password) do
     case email_password_auth(email, password) do
       {:ok, user} ->
         Guardian.encode_and_sign(user)
+
       _ ->
         {:error, :unauthorized}
     end
@@ -114,7 +53,7 @@ defmodule BankingApi.Account do
 
   defp email_password_auth(email, password) when is_binary(email) and is_binary(password) do
     with {:ok, user} <- get_by_email(email),
-    do: verify_password(password, user)
+         do: verify_password(password, user)
   end
 
   @doc false
@@ -123,7 +62,9 @@ defmodule BankingApi.Account do
       {:error, _} ->
         Argon2.no_user_verify()
         {:error, "Authentication error."}
-      {:ok, user} -> {:ok, user}
+
+      {:ok, _} = result ->
+        result
     end
   end
 
@@ -138,7 +79,9 @@ defmodule BankingApi.Account do
 
   def find_user_by_email(email) do
     case Repo.get_by(User, email: email) |> Repo.preload(:account) do
-      nil -> {:error, "User not found"}
+      nil ->
+        {:error, "User not found"}
+
       user ->
         {:ok, user}
     end

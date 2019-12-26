@@ -21,7 +21,6 @@ defmodule BankingApiWeb.Router do
 
   scope "/api/v1", BankingApiWeb do
     pipe_through [:api, :jwt_authenticated]
-
   end
 
   scope "/api/v1/accounts", BankingApiWeb do

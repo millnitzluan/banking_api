@@ -9,7 +9,7 @@ defmodule BankingApiWeb.AccountController do
 
   action_fallback BankingApiWeb.FallbackController
 
-  def withdraw(conn,  %{"value" => value}) do
+  def withdraw(conn, %{"value" => value}) do
     user = Guardian.Plug.current_resource(conn) |> Repo.preload(:account)
 
     case Bank.valid_transaction?(user.account, value) do
@@ -18,12 +18,13 @@ defmodule BankingApiWeb.AccountController do
 
         conn
         |> render("balance.json", account: account)
+
       _ ->
         {:error, :invalid_withdraw}
     end
   end
 
-  def transfer(conn,  %{"value" => value, "receiver_email" => receiver_email}) do
+  def transfer(conn, %{"value" => value, "receiver_email" => receiver_email}) do
     user = Guardian.Plug.current_resource(conn) |> Repo.preload(:account)
 
     case Bank.valid_transaction?(user.account, value) do
@@ -34,9 +35,11 @@ defmodule BankingApiWeb.AccountController do
 
             conn
             |> render("balance.json", account: account)
+
           {:error, _} ->
             {:error, :invalid_receiver}
         end
+
       _ ->
         {:error, :invalid_transfer}
     end
@@ -44,6 +47,7 @@ defmodule BankingApiWeb.AccountController do
 
   def show(conn, _params) do
     user = Guardian.Plug.current_resource(conn) |> Repo.preload(:account)
+
     conn
     |> render("user.json", user: user)
   end

@@ -184,6 +184,6 @@ defmodule BankingApi.Bank do
   end
 
   defp valid_withdraw_from_account?(account, value) do
-    (account.balance - value ) >= 0
+    account.balance - value >= 0
   end
 end

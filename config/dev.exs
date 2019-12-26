@@ -2,8 +2,8 @@ use Mix.Config
 
 # Configure your database
 config :banking_api, BankingApi.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: System.get_env("DB_USER") || "postgres",
+  password: System.get_env("DB_PASSWORD") || "postgres",
   database: "banking_api_dev",
   hostname: "localhost",
   show_sensitive_data_on_connection_error: true,

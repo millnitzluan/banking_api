@@ -103,7 +103,7 @@ defmodule BankingApi.BankTest do
       account = account_fixture()
       {:ok, account} = Bank.withdraw_from_account(account, 20.0)
 
-      transaction = List.first(Bank.list_transactions)
+      transaction = List.first(Bank.list_transactions())
 
       assert account.balance == 100.5
       assert transaction.value == 20.0
@@ -119,7 +119,7 @@ defmodule BankingApi.BankTest do
       {:ok, account} = Bank.transfer_to_account(account, receiver, 10.0)
       receiver = Bank.get_account!(receiver.id)
 
-      transaction = List.first(Bank.list_transactions)
+      transaction = List.first(Bank.list_transactions())
 
       assert account.balance == 110.5
       assert transaction.value == 10.0

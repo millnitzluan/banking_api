@@ -8,6 +8,5 @@ defmodule BankingApi.Repo.Migrations.CreateAccounts do
 
       timestamps()
     end
-
   end
 end
