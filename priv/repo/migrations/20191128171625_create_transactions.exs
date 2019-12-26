@@ -3,8 +3,8 @@ defmodule BankingApi.Repo.Migrations.CreateTransactions do
 
   def change do
     create table(:transactions) do
-      add :value, :float
-      add :type, :string
+      add :value, :float, null: false
+      add :type, :string, null: false
       add :account_id, references(:accounts, on_delete: :nothing)
 
       timestamps()

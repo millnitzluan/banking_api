@@ -1,5 +1,5 @@
 defmodule BankingApiWeb.UserControllerTest do
-  use BankingApiWeb.ConnCase
+  use BankingApiWeb.ConnCase, async: true
 
   alias BankingApi.Account
   alias BankingApi.Auth.Guardian

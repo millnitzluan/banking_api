@@ -1,5 +1,5 @@
 defmodule HealthCheckControllerTest do
-  use BankingApiWeb.ConnCase
+  use BankingApiWeb.ConnCase, async: true
 
   test "index/1 responds with up!! message", %{conn: conn} do
     response =

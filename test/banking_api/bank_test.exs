@@ -1,5 +1,5 @@
 defmodule BankingApi.BankTest do
-  use BankingApi.DataCase
+  use BankingApi.DataCase, async: true
 
   alias BankingApi.Bank
 
